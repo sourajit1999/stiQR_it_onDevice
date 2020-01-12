@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DocView"
+    android:background="#FCED90"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:id="@+id/doc_layout">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <EditText
+        android:layout_marginTop="0dp"
+        android:id="@+id/docViewer"
+        android:paddingEnd="10dp"
+        android:paddingStart="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/doc_layout"
+        android:autoLink="all"
+        android:background="@null"
+        android:textSize="17sp"
+        android:selectAllOnFocus="true"
+        android:clickable="true"
+        android:contextClickable="true"
+        android:transitionName="example_transition"
+        android:gravity="start"
+        android:textColor="#212121"
+        android:hint="Start typing..."
+        tools:ignore="MissingConstraints,NotSibling"
+
+
+        android:minHeight="200dp"
+        android:layout_below="@+id/dummyPhoto"
+        android:paddingTop="00dp"
+        />
+
+            <ImageView
+                android:id="@+id/dummyPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="0dp"
+                android:contentDescription="@string/nav_header_desc"
+                android:minHeight="150dp"
+                android:maxHeight="200dp"
+                android:scaleType="fitCenter"
+                android:paddingTop="0dp"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+    </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        tools:context=".DocView"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="17dp"
+        >
+        <Button
+            android:id="@+id/ocr"
+            android:layout_width="96dp"
+            android:layout_height="56dp"
+            android:background="@drawable/custombutton"
+            android:padding="8dp"
+            android:text="OCR"
+            android:textColor="#ffffff"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+
+
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        android:paddingBottom="0dp"
+        app:menu_fab_show_animation="@anim/rotate"
+        android:layout_alignBottom="@+id/doc_layout"
+        android:layout_alignParentRight="true"
+        app:menu_animationDelayPerItem="50"
+        app:menu_backgroundColor="#80000000"
+        app:menu_buttonSpacing="-2dp"
+        app:menu_colorNormal="@color/colorPrimaryDark"
+        app:menu_colorPressed="#000"
+        app:menu_colorRipple="#99FFFFFF"
+        app:menu_fab_label=""
+        app:menu_fab_size="normal"
+        app:menu_icon="@drawable/ic_save_black_24dp"
+        app:menu_labels_colorNormal="#000"
+        app:menu_labels_colorPressed="#444444"
+        app:menu_labels_colorRipple="#66FFFFFF"
+        app:menu_labels_cornerRadius="15dp"
+        app:menu_labels_ellipsize="none"
+        app:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+        app:menu_labels_margin="0dp"
+        app:menu_labels_maxLines="-1"
+        app:menu_labels_padding="8dp"
+        app:menu_labels_paddingBottom="4dp"
+        app:menu_labels_paddingLeft="8dp"
+        app:menu_labels_paddingRight="8dp"
+        app:menu_labels_paddingTop="4dp"
+        app:menu_labels_position="left"
+        app:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+        app:menu_labels_showShadow="true"
+        app:menu_labels_singleLine="false"
+        app:menu_labels_textColor="#FFFFFF"
+        app:menu_labels_textSize="15dp"
+        app:menu_openDirection="up"
+        app:menu_shadowColor="#66000000"
+        app:menu_shadowRadius="4dp"
+        app:menu_shadowXOffset="1dp"
+        app:menu_shadowYOffset="3dp"
+        app:menu_showShadow="true"
+        tools:ignore="MissingConstraints,NotSibling"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        >
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/doc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="#000"
+            app:fab_colorPressed="@color/colorAccent"
+            android:src="@drawable/ic_format_align_left_blue_24dp"
+            app:fab_label="Save as doc"
+            app:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/pdf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="#000"
+            app:fab_colorPressed="@color/colorAccent"
+            android:src="@drawable/ic_picture_as_pdf_red_24dp"
+            app:fab_label="Save as pdf"
+            app:fab_size="mini" />
+    </com.github.clans.fab.FloatingActionMenu>
+
+
+</RelativeLayout>

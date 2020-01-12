@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolb"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    app:title="stiQRs"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:elevation="5dp"
+    android:animateLayoutChanges="true"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:background="@drawable/custom_toolbar_solid"
+    app:layout_scrollFlags="scroll|enterAlways"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    </androidx.appcompat.widget.Toolbar>
+

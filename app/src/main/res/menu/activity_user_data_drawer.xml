@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_add_shopping_cart_black_24dp"
+            android:title="Order Online" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="Invite" />
+        <item
+            android:id="@+id/aboutUs"
+            android:icon="@drawable/ic_insert_emoticon_black_24dp"
+            android:title="About us" />
+        <item
+            android:id="@+id/nav_tools"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_fav"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="Favourites" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_power_settings_new_black_24dp"
+            android:title="Log Out" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/menu_share" />
+            <item
+                android:id="@+id/faq"
+                android:icon="@drawable/ic_question_answer_black_24dp"
+                android:title="FAQ" />
+            <item
+                android:id="@+id/contactus"
+                android:icon="@drawable/ic_question_answer_black_24dp"
+                android:title="Contact Us" />
+        </menu>
+    </item>
+
+</menu>
