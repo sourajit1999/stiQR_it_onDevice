@@ -142,29 +142,9 @@ public class HistoryActivity extends AppCompatActivity
         mAdapter.setOnItemClickListener(new HistoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                final historyItems items = brvList.get(position);
-                FirebaseDatabase.getInstance().getReference("UsersData")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists()){
-                                    String qrCode =items.getmCode();
-//                                        Toast.makeText(HistoryActivity.this,"Touched item",Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(HistoryActivity.this, StiQRcontent.class);
-                                    intent.putExtra("code", qrCode);
-                                    intent.putExtra("title", items.getmTitle());
-                                    startActivity(intent);
-                                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
+                final historyItems item = brvList.get(position);
+                Intent intent = new Intent(HistoryActivity.this,StiQRcontent.class);
+                intent.putExtra("stiQR")
             }
         });
     }

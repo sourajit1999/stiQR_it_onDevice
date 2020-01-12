@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.applex.inc.stiqrit.Adapters.gridAdapter;
 import com.applex.inc.stiqrit.ModelItems.gridItems;
 import com.applex.inc.stiqrit.ModelItems.historyItems;
+import com.applex.inc.stiqrit.Util.DatabaseHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,10 +46,6 @@ import static java.lang.Boolean.TRUE;
 
 public class StiQRcontent extends AppCompatActivity {
 
-    public static ArrayList<gridItems> mList;
-    RecyclerView mRecyclerView;
-    gridAdapter mAdapter;
-
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 400;
     private static final int IMAGE_PICK_GALLERY_CODE = 1000;
@@ -55,12 +53,16 @@ public class StiQRcontent extends AppCompatActivity {
     String cameraPermission[];
     String storagePermission[];
 
+    ArrayList<gridItems> mList;
+    RecyclerView mRecyclerView;
+    gridAdapter mAdapter;
+
     Uri image_uri;
 
     private ProgressBar loading;
 
-    public static String code;
-
+    private String stiQR_ID;
+    DatabaseHelper myDB;
 
 
     @Override
@@ -73,47 +75,24 @@ public class StiQRcontent extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final Intent i = getIntent();
-        tb.setTitle(i.getStringExtra("title"));
-
-
-//        Toast.makeText(StiQRcontent.this, i.getStringExtra("title"), Toast.LENGTH_SHORT).show();
-
-        code = i.getStringExtra("code");
-
-
-        FirebaseDatabase.getInstance().getReference("UsersData")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(code)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            historyItems i = dataSnapshot.getValue(historyItems.class);
-                            tb.setTitle(i.getmTitle());
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });;
-
-//        mAuth= FirebaseAuth.getInstance();
-
-        mRecyclerView = findViewById(R.id.recyclerview_id);
-        loading = findViewById(R.id.progress);
-
-        mStorageRef= FirebaseStorage.getInstance().getReference();
-        mDatabaseRef= FirebaseDatabase.getInstance().getReference("Uploads");
-
-
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+
+        final Intent i = getIntent();
+        stiQR_ID = i.getStringExtra("code");
+        Cursor data = myDB.getItemId(stiQR_ID);
+        int itemID = -1;
+        while (data.moveToNext()) {
+            itemID = data.getInt(0);
+        }
+        if (itemID > -1) {
+
+        }
+        tb.setTitle(i.getStringExtra(code));
+
+        mRecyclerView = findViewById(R.id.recyclerview_id);
+        loading = findViewById(R.id.progress);
 
     }
 
@@ -458,7 +437,6 @@ public class StiQRcontent extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onStart() {
