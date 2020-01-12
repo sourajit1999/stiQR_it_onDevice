@@ -3,6 +3,8 @@ package com.applex.inc.stiqrit;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.applex.inc.stiqrit.Adapters.HistoryAdapter;
 import com.applex.inc.stiqrit.ModelItems.UserDetails;
 import com.applex.inc.stiqrit.ModelItems.historyItems;
+import com.applex.inc.stiqrit.Util.DatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,22 +46,23 @@ import java.util.Calendar;
 public class HistoryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    DatabaseHelper myDB;
+
 //    private SwipeRefreshLayout mySwipeRefreshLayout;
 
     private static final int CAMERA_REQUEST_CODE = 200;
     String cameraPermission[];
+
     private FirebaseAuth mAuth;
     private FirebaseUser fireuser ;
 
-    public static ArrayList<historyItems> mList ;
-    public static RecyclerView mRecyclerView;
-    public static HistoryAdapter mAdapter;
+    public ArrayList<historyItems> mList ;
+    public RecyclerView mRecyclerView;
+    public HistoryAdapter mAdapter;
 
     ProgressBar loading ;
 
     Toolbar toolbar;
-
-
 
     public static RecyclerView.LayoutManager mLayoutManager;
 
@@ -67,10 +72,8 @@ public class HistoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
 
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         cameraPermission = new String[]{Manifest.permission.CAMERA};
 
@@ -80,7 +83,6 @@ public class HistoryActivity extends AppCompatActivity
         FloatingActionButton fab = findViewById(R.id.fab);
         loading = findViewById(R.id.progressBar1);
 //        mySwipeRefreshLayout= findViewById(R.id.swiperefresh);
-
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -173,41 +175,43 @@ public class HistoryActivity extends AppCompatActivity
 
     public void createList() {
         mList = new ArrayList<>();
-        FirebaseDatabase.getInstance().getReference("UsersData")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            for(DataSnapshot itemSnapshot : dataSnapshot.getChildren()){
-                                historyItems i = itemSnapshot.getValue(historyItems.class);
-                                mList.add(i);
-                            }
-                            buildRecyclerView(mList);
-                            loading.setVisibility(View.GONE);
-                        }
-                        else{
-                            Calendar calendar = Calendar.getInstance();
-                            String currDate = DateFormat.getDateInstance().format(calendar.getTime());
-                            mList.add(new historyItems("stiQR it","Scan your first stiQR ",currDate,"abc"));
-                            buildRecyclerView(mList);
-                            loading.setVisibility(View.GONE);
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+        //TARGET FOLDER
+        //File downloadsFolder= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File folder= new File("/storage/emulated/0/stiQR it/");
+        folder.mkdirs();
 
-                    }
-                });
+        if(folder.isDirectory())
+        {
+            //GET ALL FILES IN DOWNLOAD FOLDER
+            File[] files=folder.listFiles();
+
+            //LOOP THRU THOSE FILES GETTING NAME AND URI
+            for (int i=0;i<files.length;i++)
+            {
+                File file=files[i];
+                String stiQR_code = file.getName();
+
+                Cursor data = myDB.getItemId(stiQR_code);
+                int itemID = -1;
+                while (data.moveToNext()) {
+                    itemID = data.getInt(0);
+                }
+                if (itemID > -1) {
+                    //1 = stiQR_ID
+                    //2 = title
+                    //3 = description
+                    //4 = date
+                    mList.add(new historyItems(data.getString(1),data.getString(2),data.getString(3),data.getString(4)));
+                }
+            }
 //        if(mList.isEmpty()){
 //            Calendar calendar = Calendar.getInstance();
 //            String currDate = DateFormat.getDateInstance().format(calendar.getTime());
 //            mList.add(new historyItems("stiQR it","Scan your first stiQR ",currDate));
 //            buildRecyclerView(mList);
 //            loading.setVisibility(View.GONE);
-//        }
-
+       }
     }
 
     /////////////////////PERMISSIONS////////////////////

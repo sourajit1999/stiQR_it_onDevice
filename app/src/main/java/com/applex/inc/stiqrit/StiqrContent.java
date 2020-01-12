@@ -60,13 +60,9 @@ public class StiqrContent extends AppCompatActivity {
 
     Uri image_uri;
 
-    private StorageReference mStorageRef;
-//    private FirebaseAuth mAuth;
-    private DatabaseReference mDatabaseRef;
     private ProgressBar loading;
-    private StorageTask mUploadtask;
 
-    String code;
+    public static String code;
 
 
 

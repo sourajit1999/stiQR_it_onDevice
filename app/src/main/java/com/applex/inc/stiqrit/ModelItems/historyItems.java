@@ -14,11 +14,11 @@ public class historyItems {
 
     }
 
-    public historyItems(String title, String desc, String date,String code) {
+    public historyItems(String code,String title, String desc, String date) {
+        mCode = code;
         mTitle = title;
         mDesc = desc;
         mDate = date;
-        mCode = code;
     }
 
     public String getmTitle() {

@@ -29,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.CameraConfiguration;
@@ -69,7 +71,7 @@ import static java.lang.Boolean.TRUE;
 
 public class CameraActivity extends AppCompatActivity {
 
-    private static final String LOGGING_TAG = "Fotoapparat Example";
+    private static final String LOGGING_TAG = "Fotoapparat stiQR_it";
 
     private CameraView cameraView;
     private FocusView focusView;
@@ -243,7 +245,7 @@ public class CameraActivity extends AppCompatActivity {
         capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePicture();
+                takePicture(StiqrContent.code);
                 Toast toast = Toast.makeText(CameraActivity.this,"Hold steady",Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP,0,240);
                 toast.show();
@@ -252,14 +254,16 @@ public class CameraActivity extends AppCompatActivity {
         });
     }
 
-    private void takePicture() {
+    private void takePicture(String stiQR_id) {
         PhotoResult photoResult = fotoapparat.takePicture();
 
-        File f=  new File(Environment.getExternalStorageDirectory()+"/SnapLingo","Pictures");
+        File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it",stiQR_id);
         f.mkdirs();
+//        Calendar calendar = Calendar.getInstance();
+        String currDate = DateFormat.getDateInstance().toString();
         photoResult.saveToFile(new File(
-                Environment.getExternalStorageDirectory()+"/SnapLingo/Pictures",
-                "photo.jpg"
+                Environment.getExternalStorageDirectory()+"/stiQR it/"+stiQR_id,
+                currDate
         ));
 
         photoResult
@@ -299,7 +303,7 @@ public class CameraActivity extends AppCompatActivity {
                         image_uri = Uri.parse(path);
 
                         CropImage.activity(image_uri)
-                                .setActivityTitle("SnapCrop")
+                                .setActivityTitle("Crop")
                                 .setAllowRotation(TRUE)
                                 .setAllowCounterRotation(TRUE)
                                 .setAllowFlipping(TRUE)
@@ -371,30 +375,19 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        if (hasCameraPermission) {
             fotoapparat.start();
-//        }
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        if (hasCameraPermission) {
+
             fotoapparat.stop();
-//        }
+
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
-//            hasCameraPermission = true;
-//            fotoapparat.start();
-//            cameraView.setVisibility(View.VISIBLE);
-//        }
-//    }
+
 
     private class SampleFrameProcessor implements FrameProcessor {
         @Override
