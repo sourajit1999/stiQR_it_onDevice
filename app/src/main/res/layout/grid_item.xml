@@ -6,7 +6,7 @@
     android:layout_height="190dp"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
     android:layout_margin="10dp"
-    cardview:cardElevation="2dp"
+    android:elevation="0dp"
     android:layout_columnWeight="1"
     android:background="#fad7a0"
     cardview:cardCornerRadius="10dp">
@@ -15,24 +15,28 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/grid_item_bg"
         >
 
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:background="#fad7a0"
+            android:background="@drawable/grid_item_bg"
             android:src="@drawable/ic_format_align_left_black_24dp" />
 
         <TextView
             android:id="@+id/title"
-            android:textColor="@color/colorblue"
-            android:textSize="13sp"
+            android:textColor="@color/colorbookmark"
+            android:textSize="14sp"
             android:gravity="center"
-            android:background="#fff"
+            android:layout_marginTop="-40dp"
+            android:background="@drawable/grid_title_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:textAlignment="gravity"
             android:text="my notes.."
             />
 

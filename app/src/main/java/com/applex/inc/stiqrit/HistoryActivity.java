@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,9 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class HistoryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -154,7 +151,7 @@ public class HistoryActivity extends AppCompatActivity
                                 if(dataSnapshot.exists()){
                                     String qrCode =items.getmCode();
 //                                        Toast.makeText(HistoryActivity.this,"Touched item",Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(HistoryActivity.this, StiqrContent.class);
+                                    Intent intent = new Intent(HistoryActivity.this, StiQRcontent.class);
                                     intent.putExtra("code", qrCode);
                                     intent.putExtra("title", items.getmTitle());
                                     startActivity(intent);

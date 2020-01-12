@@ -31,12 +31,9 @@ import com.applex.inc.stiqrit.ModelItems.historyItems;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 //import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -45,7 +42,7 @@ import java.util.ArrayList;
 
 import static java.lang.Boolean.TRUE;
 
-public class StiqrContent extends AppCompatActivity {
+public class StiQRcontent extends AppCompatActivity {
 
     public static ArrayList<gridItems> mList;
     RecyclerView mRecyclerView;
@@ -80,7 +77,7 @@ public class StiqrContent extends AppCompatActivity {
         tb.setTitle(i.getStringExtra("title"));
 
 
-//        Toast.makeText(StiqrContent.this, i.getStringExtra("title"), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(StiQRcontent.this, i.getStringExtra("title"), Toast.LENGTH_SHORT).show();
 
         code = i.getStringExtra("code");
 
@@ -125,7 +122,7 @@ public class StiqrContent extends AppCompatActivity {
     public void buildRecyclerView(final ArrayList<gridItems> brvList) {
 
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new gridAdapter( mList, StiqrContent.this);
+        mAdapter = new gridAdapter( mList, StiQRcontent.this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
@@ -134,7 +131,7 @@ public class StiqrContent extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
 //                   if(position == 2){
-//                        Intent intent = new Intent(StiqrContent.this,Video_activity.class);
+//                        Intent intent = new Intent(StiQRcontent.this,Video_activity.class);
 //                        intent.putExtra("videoID","6M5VXKLf4D4");
 //                        startActivity(intent);
 //                    }
@@ -144,7 +141,7 @@ public class StiqrContent extends AppCompatActivity {
                     }
                     else  {
                         gridItems items = brvList.get(position);
-                        Intent intent = new Intent(StiqrContent.this, DocView.class);
+                        Intent intent = new Intent(StiQRcontent.this, DocView.class);
                         intent.putExtra("Data", items.getmData());
                         intent.putExtra("code",code);
                         intent.putExtra("name",items.getmName());
@@ -207,7 +204,7 @@ public class StiqrContent extends AppCompatActivity {
     }
 
     private void pickCamera(){
-        Intent intent = new Intent(StiqrContent.this, CameraActivity.class);
+        Intent intent = new Intent(StiQRcontent.this, CameraActivity.class);
         startActivity(intent);
     }
 
@@ -313,7 +310,7 @@ public class StiqrContent extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 if(mUploadtask!=null && mUploadtask.isInProgress()){
-                  Toast.makeText(StiqrContent.this, "Upload in Progress", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(StiQRcontent.this, "Upload in Progress", Toast.LENGTH_SHORT).show();
                 }else {
 //                    uploadFile(resultUri);
                 }
@@ -324,7 +321,7 @@ public class StiqrContent extends AppCompatActivity {
 //                storageReference.putFile(result).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 //                    @Override
 //                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        Toast.makeText(StiqrContent.this,"upload successful",Toast.LENGTH_SHORT).show();;
+//                        Toast.makeText(StiQRcontent.this,"upload successful",Toast.LENGTH_SHORT).show();;
 //
 //                    }
 //                });
@@ -404,10 +401,10 @@ public class StiqrContent extends AppCompatActivity {
                     }
                 }
                 else if (which == 2) {
-                    Intent intent = new Intent(StiqrContent.this, DocView.class);
+                    Intent intent = new Intent(StiQRcontent.this, DocView.class);
                     intent.putExtra("gridId", String.valueOf(mList.size()));
                     intent.putExtra("code",code);
-                    Toast.makeText(StiqrContent.this,code,Toast.LENGTH_LONG).show();
+                    Toast.makeText(StiQRcontent.this,code,Toast.LENGTH_LONG).show();
                     startActivity(intent);
 //                    if (!checkStoragePermission()) {
 //                        requestStoragePermission();

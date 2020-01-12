@@ -2,6 +2,7 @@ package com.applex.inc.stiqrit;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.applex.inc.stiqrit.ModelItems.historyItems;
+import com.applex.inc.stiqrit.Util.DatabaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +34,8 @@ import static java.lang.Boolean.FALSE;
 public class ScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     ZXingScannerView scannerView;
+
+    DatabaseHelper myDB;
     private DatabaseReference mDatabase;
 
     Dialog mydialogue;
@@ -48,45 +52,59 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
     @Override
     public void handleResult(final Result result) {
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
-                .child(result.getText().trim());
+        final String code = result.getText().trim();
 
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
+        Cursor data = myDB.getItemId(code);
+        int itemID = -1;
+        while (data.moveToNext()) {
+            itemID = data.getInt(0);
+        }
+        if (itemID > -1) {
+        //stiQR coded folder exists
+            Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
+            intent.putExtra("stiQR_ID",code);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
+        else {
+            mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
+                    .child(code);
 
-                    if(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() != null) {
 
-                        Intent intent = new Intent(ScannerActivity.this, StiqrContent.class);
-                        intent.putExtra("code",result.getText().trim());
+                        if(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+
+                            Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
+                            intent.putExtra("code",result.getText().trim());
+                            startActivity(intent);
+                            finish();
+                        }
+                        else if(dataSnapshot.getValue().toString().equals("0")){
+                            showdialogstiQR(code);
+                        }
+                        else{
+                            Toast.makeText(ScannerActivity.this,"stiQR access denied!", Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    }
+                    else {
+                        Toast.makeText(ScannerActivity.this,"QR not recognized!", Toast.LENGTH_LONG)
+                                .show();
+                        Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
                         startActivity(intent);
                         finish();
                     }
-                    else if(dataSnapshot.getValue().toString().equals("0")){
-                        showdialogstiQR(result.getText().trim());
-                    }
-                    else{
-                        Toast.makeText(ScannerActivity.this,"stiQR access denied!", Toast.LENGTH_LONG)
-                                .show();
-                    }
                 }
-                else {
-                    Toast.makeText(ScannerActivity.this,"QR not recognized!", Toast.LENGTH_LONG)
-                            .show();
-                    Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-//        }
+            });
+        }
 
     }
 
@@ -143,7 +161,7 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     mydialogue.dismiss();
-                                                    Intent intent = new Intent(ScannerActivity.this, StiqrContent.class);
+                                                    Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
                                                     startActivity(intent);
                                                     finish();
                                                 }

@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.DateFormat;
-import java.util.Calendar;
+import java.util.Locale;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.CameraConfiguration;
@@ -245,7 +246,7 @@ public class CameraActivity extends AppCompatActivity {
         capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePicture(StiqrContent.code);
+                takePicture(StiQRcontent.code);
                 Toast toast = Toast.makeText(CameraActivity.this,"Hold steady",Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP,0,240);
                 toast.show();
@@ -260,10 +261,10 @@ public class CameraActivity extends AppCompatActivity {
         File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it",stiQR_id);
         f.mkdirs();
 //        Calendar calendar = Calendar.getInstance();
-        String currDate = DateFormat.getDateInstance().toString();
+        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
         photoResult.saveToFile(new File(
                 Environment.getExternalStorageDirectory()+"/stiQR it/"+stiQR_id,
-                currDate
+                timeStamp //child
         ));
 
         photoResult
