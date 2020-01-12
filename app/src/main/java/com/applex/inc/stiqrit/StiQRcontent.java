@@ -451,7 +451,9 @@ public class StiQRcontent extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == android.R.id.home){
-            super.onBackPressed();
+            Intent intent = new Intent(StiQRcontent.this , HistoryActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_out_left , R.anim.slide_in_right);
         }
 
         return super.onOptionsItemSelected(item);

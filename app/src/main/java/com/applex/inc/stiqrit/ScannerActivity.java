@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.applex.inc.stiqrit.ModelItems.historyItems;
 import com.applex.inc.stiqrit.Util.DatabaseHelper;
+import com.applex.inc.stiqrit.Util.Utility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,8 +25,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.Result;
 
+import java.io.File;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -67,43 +71,37 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
         else {
-            mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
-                    .child(code);
+            if (Utility.checkConnection(ScannerActivity.this)==true){
+                mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
+                        .child(code);
 
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null) {
-
-                        if(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-
-                            Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
-                            intent.putExtra("code",result.getText().trim());
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            if(dataSnapshot.getValue().toString().equals("0")){
+                                showdialogstiQR(code);
+                            }
+                            else{
+                                Toast.makeText(ScannerActivity.this,"stiQR already in use!!", Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        }
+                        else {
+                            Toast.makeText(ScannerActivity.this,"stiQR not recognized!", Toast.LENGTH_LONG)
+                                    .show();
+                            Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
                             startActivity(intent);
                             finish();
                         }
-                        else if(dataSnapshot.getValue().toString().equals("0")){
-                            showdialogstiQR(code);
-                        }
-                        else{
-                            Toast.makeText(ScannerActivity.this,"stiQR access denied!", Toast.LENGTH_LONG)
-                                    .show();
-                        }
                     }
-                    else {
-                        Toast.makeText(ScannerActivity.this,"QR not recognized!", Toast.LENGTH_LONG)
-                                .show();
-                        Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
-                        startActivity(intent);
-                        finish();
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
-                }
+                });
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
         }
 
     }
@@ -121,7 +119,7 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
         scannerView.stopCamera();
     }
 
-    public void showdialogstiQR(final String qrCode){
+    public void showdialogstiQR(final String code){
         Button save;
         final EditText qrName;
         final EditText qrDesc;
@@ -129,13 +127,10 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
         mydialogue.setContentView(R.layout.qr_description_dialog);
         mydialogue.setCanceledOnTouchOutside(FALSE);
 
-        save= mydialogue.findViewById(R.id.save);
+        save = mydialogue.findViewById(R.id.save);
         qrName = mydialogue.findViewById(R.id.QRname);
         qrDesc = mydialogue.findViewById(R.id.QRdesc);
-        qrDesc.setText("");
-//        final String Date = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
-        Calendar calendar = Calendar.getInstance();
-        final String Date = DateFormat.getDateInstance().format(calendar.getTime());
+        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis()) ;
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,36 +139,21 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                     qrName.requestFocus();
                 }
                 else{
-                    FirebaseDatabase.getInstance().getReference("Codes")
-                            .child(qrCode)
-                            .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-
-//                                    Toast.makeText(ScannerActivity.this, "HGGK", Toast.LENGTH_LONG)
-////                                            .show();
-                                    historyItems item = new historyItems(qrName.getText().toString(),qrDesc.getText().toString(),Date,qrCode);
-                                    FirebaseDatabase.getInstance().getReference("UsersData")
-                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                            .child(qrCode).setValue(item)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    mydialogue.dismiss();
-                                                    Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            });
-                                }
-                            });
-
+                    File folder = new File("/storage/emulated/0/stiQR it/" + code + "/");
+                    folder.mkdirs();
+                    boolean insertData = myDB.addData(code , qrName.getText().toString() , qrDesc.getText().toString() , timeStamp);
+                    if(!insertData){
+                        Toast.makeText(ScannerActivity.this,"Something went wrong :(",Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Intent intent = new Intent(ScannerActivity.this , StiQRcontent.class);
+                        intent.putExtra("stiQR_name" , code);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
                 }
             }
         });
         mydialogue.show();
-
     }
-
 }
