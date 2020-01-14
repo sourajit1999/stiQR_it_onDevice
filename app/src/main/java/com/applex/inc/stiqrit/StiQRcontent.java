@@ -30,6 +30,7 @@ import com.applex.inc.stiqrit.Adapters.gridAdapter;
 import com.applex.inc.stiqrit.ModelItems.gridItems;
 import com.applex.inc.stiqrit.ModelItems.historyItems;
 import com.applex.inc.stiqrit.Util.DatabaseHelper;
+import com.applex.inc.stiqrit.Util.Utility;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static java.lang.Boolean.TRUE;
@@ -61,7 +63,7 @@ public class StiQRcontent extends AppCompatActivity {
 
     private ProgressBar loading;
 
-    private String stiQR_ID;
+    private String code;
     DatabaseHelper myDB;
 
 
@@ -78,21 +80,18 @@ public class StiQRcontent extends AppCompatActivity {
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-
+        myDB = new DatabaseHelper(this);
         final Intent i = getIntent();
-        stiQR_ID = i.getStringExtra("code");
-        Cursor data = myDB.getItemId(stiQR_ID);
-        int itemID = -1;
-        while (data.moveToNext()) {
-            itemID = data.getInt(0);
-        }
-        if (itemID > -1) {
+        code = i.getStringExtra("stiQR_ID");
 
-        }
-        tb.setTitle(i.getStringExtra(code));
+        Cursor data = myDB.getTitle(code);
+        tb.setTitle(data.getString(0));
 
         mRecyclerView = findViewById(R.id.recyclerview_id);
         loading = findViewById(R.id.progress);
+
+        createList();
+        buildRecyclerView(mList);
 
     }
 
@@ -100,7 +99,6 @@ public class StiQRcontent extends AppCompatActivity {
 
     public void buildRecyclerView(final ArrayList<gridItems> brvList) {
 
-        mRecyclerView.setHasFixedSize(true);
         mAdapter = new gridAdapter( mList, StiQRcontent.this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
         mRecyclerView.setAdapter(mAdapter);
@@ -115,19 +113,16 @@ public class StiQRcontent extends AppCompatActivity {
 //                        startActivity(intent);
 //                    }
 
-                    if (position == 0){
-                        showDialogbox(mList.size());
-                    }
-                    else  {
-                        gridItems items = brvList.get(position);
-                        Intent intent = new Intent(StiQRcontent.this, DocView.class);
-                        intent.putExtra("Data", items.getmData());
-                        intent.putExtra("stiQR_ID",code);
-                        intent.putExtra("name",items.getmName());
-                        intent.putExtra("gridId", String.valueOf(position));
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    }
+//                        gridItems items = brvList.get(position);
+//                        Intent intent = new Intent(StiQRcontent.this, DocView.class);
+//                        intent.putExtra("Data", items.getmData());
+//                        intent.putExtra("stiQR_ID",code);
+//                        intent.putExtra("name",items.getmName());
+//                        intent.putExtra("gridId", String.valueOf(position));
+//                        startActivity(intent);
+//                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                Utility.showToast(StiQRcontent.this,"item tapped");
+
                 }
 
             @Override
@@ -144,33 +139,30 @@ public class StiQRcontent extends AppCompatActivity {
 
     public void createList() {
 
-        mList=new ArrayList<>();
-        mList.add(new gridItems(R.drawable.add_content,"Add Note","Data"));
+        mList = new ArrayList<>();
 
-//            FirebaseDatabase.getInstance().getReference("CodesData")
-//                    .child(code)
-//                    .addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            if (dataSnapshot.exists()) {
-//                                for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-//                                    gridItems i = itemSnapshot.getValue(gridItems.class);
-//                                    mList.add(i);
-////                                Toast.makeText(HistoryActivity.this,"added",Toast.LENGTH_LONG).show();
-//
-//                                }
-//                                buildRecyclerView(mList);
-//                            }
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                            loading.setVisibility(View.GONE);
-//                        }
-//                    });
+        //TARGET FOLDER
+        //File downloadsFolder= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File folder = new File("/storage/emulated/0/stiQR it/"+code+"/");
+        folder.mkdirs();
 
-        loading.setVisibility(View.GONE);
+        if (folder.isDirectory()) {
+            //GET ALL FILES IN DOWNLOAD FOLDER
+            File[] files = folder.listFiles();
+
+            //LOOP THRU THOSE FILES GETTING NAME AND URI
+            for (int i = 0; i < files.length; i++) {
+                File file=files[i];
+                gridItems gi= new gridItems();
+                gi.setmName(file.getName());
+                if(getFileExtension(Uri.fromFile(file)).equals(".jpg")){
+                    gi.setmResourceImage(Uri.fromFile(file));
+                }
+                mList.add(gi);
+
+            }
+            loading.setVisibility(View.GONE);
+        }
     }
 
 
@@ -184,6 +176,7 @@ public class StiQRcontent extends AppCompatActivity {
 
     private void pickCamera(){
         Intent intent = new Intent(StiQRcontent.this, CameraActivity.class);
+        intent.putExtra("stiQR_ID",code);
         startActivity(intent);
     }
 
@@ -288,57 +281,6 @@ public class StiQRcontent extends AppCompatActivity {
             Uri resultUri = result.getUri();
 
             if (resultCode == RESULT_OK) {
-                if(mUploadtask!=null && mUploadtask.isInProgress()){
-                  Toast.makeText(StiQRcontent.this, "Upload in Progress", Toast.LENGTH_SHORT).show();
-                }else {
-//                    uploadFile(resultUri);
-                }
-//                FirebaseUser user=mAuth.getCurrentUser();
-//                String userID= user.getUid();
-//                String name="No name";
-//                StorageReference storageReference=mStorageRef.child("images/users/"+ userID+ "/"+name+ ".jpg");
-//                storageReference.putFile(result).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        Toast.makeText(StiQRcontent.this,"upload successful",Toast.LENGTH_SHORT).show();;
-//
-//                    }
-//                });
-
-
-
-//                resultUri = result.getUri();
-//                pv.setImageURI(resultUri);
-//
-//                BitmapDrawable bitmapDrawable = (BitmapDrawable) pv.getDrawable();
-//                Bitmap bitmap = bitmapDrawable.getBitmap();
-//
-//                TextRecognizer recognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-//
-//                if (!recognizer.isOperational()) {
-//                    Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-//                    SparseArray<TextBlock> items = recognizer.detect(frame);
-//                    StringBuilder sb = new StringBuilder();
-//                    for (int i = 0; i < items.size(); i++) {
-//                        TextBlock myItem = items.valueAt(i);
-//                        sb.append(myItem.getValue());
-//                        if(i != items.size()-1) {
-//                            sb.append("\n");
-//                        }
-//
-//                    }
-//                    mResultEt.setText(sb.toString());
-//                    if(mResultEt.length()!=0) {
-//                        OCRtext=mResultEt.getText().toString();
-//                        databaseAdder();
-//                        added =1;
-//                    }
-//                }
-
-
 
             }
         }
@@ -411,9 +353,7 @@ public class StiQRcontent extends AppCompatActivity {
         ContentResolver cr= getContentResolver();
         MimeTypeMap mime= MimeTypeMap.getSingleton();
         return  mime.getExtensionFromMimeType(cr.getType(uri));
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -441,8 +381,6 @@ public class StiQRcontent extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        createList();
-        buildRecyclerView(mList);
-        loading.setVisibility(View.GONE);
+
     }
 }

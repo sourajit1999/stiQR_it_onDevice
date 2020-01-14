@@ -246,7 +246,8 @@ public class CameraActivity extends AppCompatActivity {
         capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePicture(StiQRcontent.code);
+                Intent i =getIntent();
+                takePicture(i.getStringExtra("stiQR_ID"));
                 Toast toast = Toast.makeText(CameraActivity.this,"Hold steady",Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP,0,240);
                 toast.show();
@@ -261,10 +262,10 @@ public class CameraActivity extends AppCompatActivity {
         File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it",stiQR_id);
         f.mkdirs();
 //        Calendar calendar = Calendar.getInstance();
-        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
+//        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
         photoResult.saveToFile(new File(
                 Environment.getExternalStorageDirectory()+"/stiQR it/"+stiQR_id,
-                timeStamp //child
+                System.currentTimeMillis()+".jpg" //child
         ));
 
         photoResult

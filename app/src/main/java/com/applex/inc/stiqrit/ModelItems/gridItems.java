@@ -1,7 +1,11 @@
 package com.applex.inc.stiqrit.ModelItems;
 
+import android.net.Uri;
+
 public class gridItems {
-    private int mResourceImage;
+    private Uri mResourceImage;
+
+
     private String mName;
     private String mData;
 
@@ -9,13 +13,13 @@ public class gridItems {
 
     }
 
-    public gridItems(int ImageResource, String mName, String mData) {
+    public gridItems(Uri ImageResource, String mName, String mData) {
         mResourceImage = ImageResource;
         this.mName = mName;
         this.mData = mData;
     }
 
-    public int getmResourceImage() {
+    public Uri getmResourceImage() {
         return mResourceImage;
     }
 
@@ -26,4 +30,17 @@ public class gridItems {
     public String getmData() {
         return mData;
     }
+
+    public void setmResourceImage(Uri mResourceImage) {
+        this.mResourceImage = mResourceImage;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public void setmData(String mData) {
+        this.mData = mData;
+    }
+
 }

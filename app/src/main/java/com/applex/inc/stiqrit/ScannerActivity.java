@@ -28,6 +28,7 @@ import com.google.zxing.Result;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -50,6 +51,8 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
         scannerView=new ZXingScannerView(this);
         setContentView(scannerView);
 
+        myDB = new DatabaseHelper(this);
+
         mydialogue = new Dialog(this);
     }
 
@@ -58,19 +61,9 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
 
         final String code = result.getText().trim();
 
-        Cursor data = myDB.getItemId(code);
-        int itemID = -1;
-        while (data.moveToNext()) {
-            itemID = data.getInt(0);
-        }
-        if (itemID > -1) {
-        //stiQR coded folder exists in DB
-            Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
-            intent.putExtra("stiQR_ID",code);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        }
-        else {
+        Cursor data = myDB.getListContents();
+
+        if(data.getCount()==0){
             if (Utility.checkConnection(ScannerActivity.this)){
                 mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
                         .child(code);
@@ -85,6 +78,9 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                             else{
                                 Toast.makeText(ScannerActivity.this,"stiQR already in use!!", Toast.LENGTH_LONG)
                                         .show();
+                                Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         }
                         else {
@@ -104,7 +100,55 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
             else{
                 Utility.showToast(ScannerActivity.this,"Network unavailable...");
             }
+        }
 
+        else{
+            for(int i = 0; i < data.getCount() ; i++){
+                if(data.getString(2).equals(code)){
+                    Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
+                    intent.putExtra("stiQR_ID",code);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
+                }
+            }
+
+            if (Utility.checkConnection(ScannerActivity.this)){
+                mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
+                        .child(code);
+
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            if(dataSnapshot.getValue().toString().equals("0")){
+                                showdialogstiQR(code);
+                            }
+                            else{
+                                Toast.makeText(ScannerActivity.this,"stiQR already in use!!", Toast.LENGTH_LONG)
+                                        .show();
+                                Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                        else {
+                            Toast.makeText(ScannerActivity.this,"stiQR not recognized!", Toast.LENGTH_LONG)
+                                    .show();
+                            Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            else{
+                Utility.showToast(ScannerActivity.this,"Network unavailable...");
+            }
         }
 
     }
@@ -153,6 +197,7 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                         intent.putExtra("stiQR_ID" , code);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        finish();
                     }
                 }
             }

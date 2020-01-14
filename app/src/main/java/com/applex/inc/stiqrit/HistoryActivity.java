@@ -73,6 +73,7 @@ public class HistoryActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         cameraPermission = new String[]{Manifest.permission.CAMERA};
+        myDB = new DatabaseHelper(this);
 
         mAuth=FirebaseAuth.getInstance();
         fireuser=mAuth.getCurrentUser();
@@ -146,6 +147,7 @@ public class HistoryActivity extends AppCompatActivity
                 Intent intent = new Intent(HistoryActivity.this,StiQRcontent.class);
                 intent.putExtra("stiQR_ID",item.getmCode());
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }

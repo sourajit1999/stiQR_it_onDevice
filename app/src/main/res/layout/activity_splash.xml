@@ -23,7 +23,6 @@
       android:layout_width="match_parent"
       android:layout_height="54dp"
       android:text="@string/hi_there_"
-      android:textAppearance="@style/hi_there_"
       android:gravity="top"
       android:layout_marginTop="90dp"
       android:textSize="30dp"
@@ -92,7 +91,7 @@
       android:fontFamily="casual"
       android:gravity="center_horizontal"
       android:text="Sign up"
-      android:textColor="@color/colorblue"
+      android:textColor="@android:color/holo_blue_dark"
       android:textSize="18dp"
       android:textStyle="bold" />
 

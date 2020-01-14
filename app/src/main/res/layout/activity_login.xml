@@ -17,16 +17,12 @@
         android:textColor="#000000"
         android:textStyle="bold"
         />
-<!--
-
--->
 
     <TextView
         android:id="@+id/hi_there_"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:text="Welcome Back,"
-        android:textAppearance="@style/hi_there_"
         android:gravity="top"
         android:layout_marginTop="90dp"
         android:textSize="30dp"

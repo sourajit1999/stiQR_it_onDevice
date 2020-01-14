@@ -120,19 +120,19 @@ public class DocView extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                             if(mResultEt.length()>0){
-                                gridItems ig = new gridItems(R.drawable.ic_format_align_left_black_24dp,fileName.getText().toString(),mResultEt.getText().toString());
-                                FirebaseDatabase.getInstance().getReference("CodesData")
-                                        .child(i.getStringExtra("code"))
-                                        .child(i.getStringExtra("gridId"))
-                                        .setValue(ig).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful() ){
-                                            Toast.makeText(DocView.this,"Note saved",Toast.LENGTH_LONG).show();
-                                            mydialogue.dismiss();
-                                        }
-                                    }
-                                });
+//                                gridItems ig = new gridItems(R.drawable.ic_format_align_left_black_24dp,fileName.getText().toString(),mResultEt.getText().toString());
+//                                FirebaseDatabase.getInstance().getReference("CodesData")
+//                                        .child(i.getStringExtra("code"))
+//                                        .child(i.getStringExtra("gridId"))
+//                                        .setValue(ig).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        if(task.isSuccessful() ){
+//                                            Toast.makeText(DocView.this,"Note saved",Toast.LENGTH_LONG).show();
+//                                            mydialogue.dismiss();
+//                                        }
+//                                    }
+//                                });
                             }
                             else {
                                 Toast.makeText(DocView.this,"Note Empty",Toast.LENGTH_LONG).show();

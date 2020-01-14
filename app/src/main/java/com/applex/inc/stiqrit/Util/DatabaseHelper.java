@@ -69,6 +69,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
+    public Cursor getTitle(String stiQR_ID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT " + col3 + " FROM " + TABLE_NAME + " WHERE "+ col2 + "= '" + stiQR_ID +"'";
+        Cursor data = db.rawQuery(query,null);
+        return data;
+    }
+
+    public Cursor getDescription(String stiQR_ID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT " + col3 + " FROM " + TABLE_NAME + " WHERE "+ col2 + "= '" + stiQR_ID +"'";
+        Cursor data = db.rawQuery(query,null);
+        return data;
+    }
 //    public void updateItem(String newName,String date,int id){
 //        SQLiteDatabase db = this.getWritableDatabase();
 ////        String query = "UPDATE "+ TABLE_NAME + " SET "+ col2 + "= '" + newName +"' AND "+ col3 + "= '" + date+"'" + " WHERE "+ col1 +" ='"+id +"'"+ " AND "
