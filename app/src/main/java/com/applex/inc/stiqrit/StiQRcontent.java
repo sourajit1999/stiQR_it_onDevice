@@ -122,7 +122,7 @@ public class StiQRcontent extends AppCompatActivity {
                         gridItems items = brvList.get(position);
                         Intent intent = new Intent(StiQRcontent.this, DocView.class);
                         intent.putExtra("Data", items.getmData());
-                        intent.putExtra("code",code);
+                        intent.putExtra("stiQR_ID",code);
                         intent.putExtra("name",items.getmName());
                         intent.putExtra("gridId", String.valueOf(position));
                         startActivity(intent);

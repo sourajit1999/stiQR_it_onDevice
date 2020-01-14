@@ -144,7 +144,8 @@ public class HistoryActivity extends AppCompatActivity
             public void onItemClick(int position) {
                 final historyItems item = brvList.get(position);
                 Intent intent = new Intent(HistoryActivity.this,StiQRcontent.class);
-                intent.putExtra("stiQR")
+                intent.putExtra("stiQR_ID",item.getmCode());
+                startActivity(intent);
             }
         });
     }
@@ -355,11 +356,6 @@ public class HistoryActivity extends AppCompatActivity
         });
 
     }
-
-//    private void myUpdateOperation(){
-//        createList();
-//        buildRecyclerView(mList);
-//    }
 
     @Override
     protected void onStart() {

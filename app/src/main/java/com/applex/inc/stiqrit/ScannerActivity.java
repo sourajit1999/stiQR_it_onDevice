@@ -64,14 +64,14 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
             itemID = data.getInt(0);
         }
         if (itemID > -1) {
-        //stiQR coded folder exists
+        //stiQR coded folder exists in DB
             Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
             intent.putExtra("stiQR_ID",code);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
         else {
-            if (Utility.checkConnection(ScannerActivity.this)==true){
+            if (Utility.checkConnection(ScannerActivity.this)){
                 mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
                         .child(code);
 
@@ -100,6 +100,9 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
 
                     }
                 });
+            }
+            else{
+                Utility.showToast(ScannerActivity.this,"Network unavailable...");
             }
 
         }
@@ -147,7 +150,7 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                     }
                     else {
                         Intent intent = new Intent(ScannerActivity.this , StiQRcontent.class);
-                        intent.putExtra("stiQR_name" , code);
+                        intent.putExtra("stiQR_ID" , code);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
