@@ -61,19 +61,29 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
 
         final String code = result.getText().trim();
 
+        final String hash = Utility.md5(code);
+
         Cursor data = myDB.getListContents();
 
         if(data.getCount()==0){
             if (Utility.checkConnection(ScannerActivity.this)){
                 mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
-                        .child(code);
+                        .child(hash);
 
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null) {
                             if(dataSnapshot.getValue().toString().equals("0")){
-                                showdialogstiQR(code);
+                                FirebaseDatabase.getInstance().getReference("Codes")
+                                        .child(hash)
+                                        .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                showdialogstiQR(code);
+                                            }
+                                        });
                             }
                             else{
                                 Toast.makeText(ScannerActivity.this,"stiQR already in use!!", Toast.LENGTH_LONG)
@@ -115,14 +125,22 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
 
             if (Utility.checkConnection(ScannerActivity.this)){
                 mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
-                        .child(code);
+                        .child(hash);
 
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null) {
                             if(dataSnapshot.getValue().toString().equals("0")){
-                                showdialogstiQR(code);
+                                FirebaseDatabase.getInstance().getReference("Codes")
+                                        .child(hash)
+                                        .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                showdialogstiQR(code);
+                                            }
+                                        });
                             }
                             else{
                                 Toast.makeText(ScannerActivity.this,"stiQR already in use!!", Toast.LENGTH_LONG)
