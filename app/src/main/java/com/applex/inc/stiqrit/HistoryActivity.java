@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +39,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HistoryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,7 +51,10 @@ public class HistoryActivity extends AppCompatActivity
 //    private SwipeRefreshLayout mySwipeRefreshLayout;
 
     private static final int CAMERA_REQUEST_CODE = 200;
+
     String cameraPermission[];
+    String storagePermission[];
+    private static final int STORAGE_REQUEST_CODE = 400;
 
     private FirebaseAuth mAuth;
     private FirebaseUser fireuser ;
@@ -73,6 +79,8 @@ public class HistoryActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         cameraPermission = new String[]{Manifest.permission.CAMERA};
+        storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
         myDB = new DatabaseHelper(this);
 
         mAuth=FirebaseAuth.getInstance();
@@ -143,11 +151,22 @@ public class HistoryActivity extends AppCompatActivity
         mAdapter.setOnItemClickListener(new HistoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                final historyItems item = brvList.get(position);
-                Intent intent = new Intent(HistoryActivity.this,StiQRcontent.class);
-                intent.putExtra("stiQR_ID",item.getmCode());
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                if(position != 0) {
+                    final historyItems item = brvList.get(position);
+                    Intent intent = new Intent(HistoryActivity.this, StiQRcontent.class);
+                    intent.putExtra("stiQR_ID", item.getmCode());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                }
+                else {
+                    if (!checkCameraPermission()) {
+                        requestCameraPermission();
+                    }
+                    else {
+                        Intent intent = new Intent(HistoryActivity.this,ScannerActivity.class);
+                        startActivity(intent);
+                    }
+                }
             }
         });
     }
@@ -158,18 +177,16 @@ public class HistoryActivity extends AppCompatActivity
 
         //TARGET FOLDER
         //File downloadsFolder= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File folder= new File("/storage/emulated/0/stiQR it/");
+        File folder =  new File(Environment.getExternalStorageDirectory(),"stiQR it");
         folder.mkdirs();
 
-        if(folder.isDirectory())
-        {
+        if (folder.isDirectory()) {
             //GET ALL FILES IN DOWNLOAD FOLDER
-            File[] files=folder.listFiles();
+            File[] files = folder.listFiles();
 
             //LOOP THRU THOSE FILES GETTING NAME AND URI
-            for (int i=0;i<files.length;i++)
-            {
-                File file=files[i];
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
                 String stiQR_code = file.getName();
 
                 Cursor data = myDB.getItemId(stiQR_code);
@@ -182,19 +199,32 @@ public class HistoryActivity extends AppCompatActivity
                     //2 = title
                     //3 = description
                     //4 = date
-                    mList.add(new historyItems(data.getString(1),data.getString(2),data.getString(3),data.getString(4)));
+                    mList.add(new historyItems(data.getString(1), data.getString(2), data.getString(3), data.getString(4)));
                 }
             }
-//        if(mList.isEmpty()){
-//            Calendar calendar = Calendar.getInstance();
-//            String currDate = DateFormat.getDateInstance().format(calendar.getTime());
-//            mList.add(new historyItems("stiQR it","Scan your first stiQR ",currDate));
-//            buildRecyclerView(mList);
-//            loading.setVisibility(View.GONE);
-       }
+
+            if (mList.isEmpty()) {
+                Calendar calendar = Calendar.getInstance();
+                String currDate = DateFormat.getDateInstance().format(calendar.getTime());
+                mList.add(new historyItems("000", "Welcome to stiQR it", "Scan your first stiQR ", currDate));
+                buildRecyclerView(mList);
+                loading.setVisibility(View.GONE);
+            }
+        }
     }
 
     /////////////////////PERMISSIONS////////////////////
+
+    private void requestStoragePermission(){
+        ActivityCompat.requestPermissions(this, storagePermission,STORAGE_REQUEST_CODE);
+
+    }
+
+    private boolean checkStoragePermission(){
+        boolean result= ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE )== (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
 
     private void requestCameraPermission(){
         ActivityCompat.requestPermissions(this, cameraPermission,CAMERA_REQUEST_CODE);
@@ -227,19 +257,20 @@ public class HistoryActivity extends AppCompatActivity
                 }
                 break;
 
-//            case STORAGE_REQUEST_CODE:
-//                if(grantResults.length > 0){
-//
-//                    boolean writeStorageAccepted = grantResults[0] ==
-//                            PackageManager.PERMISSION_GRANTED;
-//                    if(writeStorageAccepted){
-//                        pickGallery();
-//                    }
-//                    else{
-//                        Toast.makeText(this,"permission denied",Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//                break;
+            case STORAGE_REQUEST_CODE:
+                if(grantResults.length > 0){
+
+                    boolean writeStorageAccepted = grantResults[0] ==
+                            PackageManager.PERMISSION_GRANTED;
+                    if(writeStorageAccepted){
+                        createList();
+                        buildRecyclerView(mList);
+                    }
+                    else{
+                        Toast.makeText(this,"permission denied",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
         }
     }
 
@@ -363,7 +394,12 @@ public class HistoryActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         loading.setVisibility(View.VISIBLE);
+        if (!checkStoragePermission()) {
+            requestStoragePermission();
+        }
+        else {
         createList();
         buildRecyclerView(mList);
+        }
     }
 }

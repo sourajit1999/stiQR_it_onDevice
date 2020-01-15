@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -143,8 +144,9 @@ public class StiQRcontent extends AppCompatActivity {
 
         //TARGET FOLDER
         //File downloadsFolder= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File folder = new File("/storage/emulated/0/stiQR it/"+code+"/");
+        File folder =  new File(Environment.getExternalStorageDirectory()+"/stiQR it",code);
         folder.mkdirs();
+
 
         if (folder.isDirectory()) {
             //GET ALL FILES IN DOWNLOAD FOLDER

@@ -7,15 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.applex.inc.stiqrit.ModelItems.gridItems;
 import com.applex.inc.stiqrit.R;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 public class gridAdapter extends RecyclerView.Adapter<gridAdapter.GridViewHolder> {

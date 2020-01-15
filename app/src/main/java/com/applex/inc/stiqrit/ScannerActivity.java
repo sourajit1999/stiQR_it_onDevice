@@ -113,10 +113,9 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
         }
 
         else{
-            for(int i = 0; i < data.getCount() ; i++){
-                if(data.getString(2).equals(code)){
+            while (data.moveToPrevious()){
+                if(code.equals(data.getString(1))){
                     Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
-                    intent.putExtra("stiQR_ID",code);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
