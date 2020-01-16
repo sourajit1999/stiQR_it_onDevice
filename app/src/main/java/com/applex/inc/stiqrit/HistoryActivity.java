@@ -151,14 +151,8 @@ public class HistoryActivity extends AppCompatActivity
         mAdapter.setOnItemClickListener(new HistoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if(position != 0) {
-                    final historyItems item = brvList.get(position);
-                    Intent intent = new Intent(HistoryActivity.this, StiQRcontent.class);
-                    intent.putExtra("stiQR_ID", item.getmCode());
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
-                else {
+                Cursor data = myDB.getListContents();
+                if(data.getCount() == 0 && position == 0){
                     if (!checkCameraPermission()) {
                         requestCameraPermission();
                     }
@@ -167,8 +161,16 @@ public class HistoryActivity extends AppCompatActivity
                         startActivity(intent);
                     }
                 }
+                else {
+                    final historyItems item = brvList.get(position);
+                    Intent intent = new Intent(HistoryActivity.this, StiQRcontent.class);
+                    intent.putExtra("stiQR_ID", item.getmCode());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                }
             }
         });
+        loading.setVisibility(View.GONE);
     }
 
 
@@ -184,32 +186,21 @@ public class HistoryActivity extends AppCompatActivity
             //GET ALL FILES IN DOWNLOAD FOLDER
             File[] files = folder.listFiles();
 
-            //LOOP THRU THOSE FILES GETTING NAME AND URI
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
-                String stiQR_code = file.getName();
+            mList = new ArrayList<>();
+            Cursor data = myDB.getListContents();
+            if (data.getCount() == 0) {
+                Calendar calendar = Calendar.getInstance();
+                String currDate = DateFormat.getDateInstance().format(calendar.getTime());
 
-                Cursor data = myDB.getItemId(stiQR_code);
-                int itemID = -1;
-                while (data.moveToNext()) {
-                    itemID = data.getInt(0);
-                }
-                if (itemID > -1) {
-                    //1 = stiQR_ID
-                    //2 = title
-                    //3 = description
-                    //4 = date
+                mList.add(new historyItems("000", "Welcome To stiQR it ", "Scan your first stiQRt", currDate));
+
+            } else {
+                data.moveToPosition(data.getCount());
+                while (data.moveToPrevious()) {
                     mList.add(new historyItems(data.getString(1), data.getString(2), data.getString(3), data.getString(4)));
                 }
             }
 
-            if (mList.isEmpty()) {
-                Calendar calendar = Calendar.getInstance();
-                String currDate = DateFormat.getDateInstance().format(calendar.getTime());
-                mList.add(new historyItems("000", "Welcome to stiQR it", "Scan your first stiQR ", currDate));
-                buildRecyclerView(mList);
-                loading.setVisibility(View.GONE);
-            }
         }
     }
 

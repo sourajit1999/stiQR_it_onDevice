@@ -82,17 +82,20 @@ public class StiQRcontent extends AppCompatActivity {
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         myDB = new DatabaseHelper(this);
-        final Intent i = getIntent();
-        code = i.getStringExtra("stiQR_ID");
+        loading = findViewById(R.id.progress);
+        mRecyclerView = findViewById(R.id.recyclerview_id) ;
+
 
         Cursor data = myDB.getTitle(code);
-        tb.setTitle(data.getString(0));
-
-        mRecyclerView = findViewById(R.id.recyclerview_id);
-        loading = findViewById(R.id.progress);
+        final Intent i = getIntent();
+        code = i.getStringExtra("stiQR_ID");
+//        tb.setTitle(data.getString(0));
 
         createList();
         buildRecyclerView(mList);
+        mRecyclerView = findViewById(R.id.recyclerview_id);
+        loading = findViewById(R.id.progress);
+
 
     }
 
@@ -157,9 +160,8 @@ public class StiQRcontent extends AppCompatActivity {
                 File file=files[i];
                 gridItems gi= new gridItems();
                 gi.setmName(file.getName());
-                if(getFileExtension(Uri.fromFile(file)).equals(".jpg")){
-                    gi.setmResourceImage(Uri.fromFile(file));
-                }
+                gi.setmResourceImage(Uri.fromFile(file));
+
                 mList.add(gi);
 
             }

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -116,6 +117,7 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
             while (data.moveToPrevious()){
                 if(code.equals(data.getString(1))){
                     Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
+                    intent.putExtra("stiQR_ID" , code);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
@@ -194,7 +196,9 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
         save = mydialogue.findViewById(R.id.save);
         qrName = mydialogue.findViewById(R.id.QRname);
         qrDesc = mydialogue.findViewById(R.id.QRdesc);
-        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis()) ;
+        //        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis()) ;
+        Calendar calendar = Calendar.getInstance();
+        final String timeStamp = DateFormat.getDateInstance().format(calendar.getTime());
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,7 +207,7 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                     qrName.requestFocus();
                 }
                 else{
-                    File folder = new File("/storage/emulated/0/stiQR it/" + code + "/");
+                    File folder =  new File(Environment.getExternalStorageDirectory()+"/stiQR it",code);
                     folder.mkdirs();
                     boolean insertData = myDB.addData(code , qrName.getText().toString() , qrDesc.getText().toString() , timeStamp);
                     if(!insertData){

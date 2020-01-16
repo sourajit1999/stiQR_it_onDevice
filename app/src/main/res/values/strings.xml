@@ -21,4 +21,7 @@
     <string name="menu_refresh">menu_refresh</string>
     <string name="hi_there_">Hi there,</string>
     <string name="not_a_membe">Not a member yet?</string>
+    <string name="title_activity_sti_qrcontent_tabbed">stiQRcontentTabbed</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 </resources>

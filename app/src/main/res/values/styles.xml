@@ -15,7 +15,8 @@
 
     <style name="camera_layout" parent="AppTheme">
         <item name="android:statusBarColor" tools:ignore="NewApi">@android:color/transparent</item>
-        <item name="android:navigationBarColor" tools:ignore="NewApi">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@android:color/transparent
+        </item>
         <item name="android:windowTranslucentStatus" tools:ignore="NewApi">true</item>
         <item name="android:windowTranslucentNavigation" tools:ignore="NewApi">true</item>
 
@@ -33,7 +34,7 @@
 
     </style>
 
-<!--    Below are for Navigation Bar-->
+    <!--    Below are for Navigation Bar-->
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
 
@@ -45,7 +46,8 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:statusBarColor" tools:ignore="NewApi">#ab003c</item>
-        <item name="android:navigationBarColor" tools:ignore="NewApi">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@android:color/transparent
+        </item>
 
     </style>
 
