@@ -20,6 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".PdfViewer"/>
+
 
         <activity android:name=".CameraActivity"
             android:theme="@style/camera_layout"
