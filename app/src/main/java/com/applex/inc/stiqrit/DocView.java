@@ -71,7 +71,7 @@ public class DocView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_doc_view);
+        setContentView(R.layout.activity_note_view);
 
         mydialogue = new Dialog(this);
 
@@ -79,17 +79,17 @@ public class DocView extends AppCompatActivity {
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
 
-        final Intent i =getIntent();
+        final Intent i = getIntent();
 //        Toast.makeText(DocView.this,i.getStringExtra("gridId"),Toast.LENGTH_LONG).show();
 
 
-        mResultEt = findViewById(R.id.docViewer) ;
+        mResultEt = findViewById(R.id.Note) ;
         ocr = findViewById(R.id.ocr);
         pv = findViewById(R.id.dummyPhoto) ;
 
 
-        flmenu = findViewById(R.id.menu);
-        flmenu.close(true);
+//        flmenu = findViewById(R.id.menu);
+//        flmenu.close(true);
 
         ocr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,85 +98,85 @@ public class DocView extends AppCompatActivity {
             }
         });
 
-        flmenu.setOnMenuButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mydialogue.setContentView(R.layout.note_name_dialog);
-                mydialogue.setCanceledOnTouchOutside(TRUE);
-
-                final Button save;
-                final EditText fileName;
-
-                save= mydialogue.findViewById(R.id.save);
-
-                fileName =mydialogue.findViewById(R.id.Notename);
-
-                if(i.getStringExtra("Data")!=null){
-                    save.setText("Save");
-                    fileName.setText(i.getStringExtra("name"));
-                }
-
-                save.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                            if(mResultEt.length()>0){
-//                                gridItems ig = new gridItems(R.drawable.ic_format_align_left_black_24dp,fileName.getText().toString(),mResultEt.getText().toString());
-//                                FirebaseDatabase.getInstance().getReference("CodesData")
-//                                        .child(i.getStringExtra("code"))
-//                                        .child(i.getStringExtra("gridId"))
-//                                        .setValue(ig).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        if(task.isSuccessful() ){
-//                                            Toast.makeText(DocView.this,"Note saved",Toast.LENGTH_LONG).show();
-//                                            mydialogue.dismiss();
-//                                        }
-//                                    }
-//                                });
-                            }
-                            else {
-                                Toast.makeText(DocView.this,"Note Empty",Toast.LENGTH_LONG).show();
-                            }
-
-
-                    }
-                });
-                mydialogue.show();
-
-            }
-        });
-
-        com.github.clans.fab.FloatingActionButton docfile  = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.doc);
-        docfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mResultEt.length()!=0) {
-                    saveDoc();
-                }
-                else {
-                    Toast.makeText(DocView.this,"Field Empty",Toast.LENGTH_LONG).show();
-                    flmenu.close(true);
-                }
-
-            }
-
-
-        });
-
-
-        com.github.clans.fab.FloatingActionButton pdffile = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.pdf);
-        pdffile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mResultEt.length()!=0) {
-                    savePdf();
-                }
-                else {
-                    Toast.makeText(DocView.this,"Field Empty",Toast.LENGTH_LONG).show();
-                    flmenu.close(true);
-                }
-            }
-        });
+//        flmenu.setOnMenuButtonClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mydialogue.setContentView(R.layout.note_name_dialog);
+//                mydialogue.setCanceledOnTouchOutside(TRUE);
+//
+//                final Button save;
+//                final EditText fileName;
+//
+//                save= mydialogue.findViewById(R.id.save);
+//
+//                fileName =mydialogue.findViewById(R.id.Notename);
+//
+//                if(i.getStringExtra("Data")!=null){
+//                    save.setText("Save");
+//                    fileName.setText(i.getStringExtra("name"));
+//                }
+//
+//                save.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                            if(mResultEt.length()>0){
+////                                gridItems ig = new gridItems(R.drawable.ic_format_align_left_black_24dp,fileName.getText().toString(),mResultEt.getText().toString());
+////                                FirebaseDatabase.getInstance().getReference("CodesData")
+////                                        .child(i.getStringExtra("code"))
+////                                        .child(i.getStringExtra("gridId"))
+////                                        .setValue(ig).addOnCompleteListener(new OnCompleteListener<Void>() {
+////                                    @Override
+////                                    public void onComplete(@NonNull Task<Void> task) {
+////                                        if(task.isSuccessful() ){
+////                                            Toast.makeText(DocView.this,"Note saved",Toast.LENGTH_LONG).show();
+////                                            mydialogue.dismiss();
+////                                        }
+////                                    }
+////                                });
+//                            }
+//                            else {
+//                                Toast.makeText(DocView.this,"Note Empty",Toast.LENGTH_LONG).show();
+//                            }
+//
+//
+//                    }
+//                });
+//                mydialogue.show();
+//
+//            }
+//        });
+//
+//        com.github.clans.fab.FloatingActionButton docfile  = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.doc);
+//        docfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(mResultEt.length()!=0) {
+//                    saveDoc();
+//                }
+//                else {
+//                    Toast.makeText(DocView.this,"Field Empty",Toast.LENGTH_LONG).show();
+//                    flmenu.close(true);
+//                }
+//
+//            }
+//
+//
+//        });
+//
+//
+//        com.github.clans.fab.FloatingActionButton pdffile = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.pdf);
+//        pdffile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(mResultEt.length()!=0) {
+//                    savePdf();
+//                }
+//                else {
+//                    Toast.makeText(DocView.this,"Field Empty",Toast.LENGTH_LONG).show();
+//                    flmenu.close(true);
+//                }
+//            }
+//        });
 
     }
 
@@ -557,6 +557,7 @@ public class DocView extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
                 pv.setImageURI(resultUri);
+                pv.setVisibility(View.VISIBLE);
 
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) pv.getDrawable();
                 Bitmap bitmap = bitmapDrawable.getBitmap();

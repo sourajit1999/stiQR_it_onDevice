@@ -30,8 +30,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.applex.inc.stiqrit.Adapters.gridAdapter;
 import com.applex.inc.stiqrit.ModelItems.gridItems;
 import com.applex.inc.stiqrit.ModelItems.historyItems;
+import com.applex.inc.stiqrit.Util.BottomSheet;
 import com.applex.inc.stiqrit.Util.DatabaseHelper;
 import com.applex.inc.stiqrit.Util.Utility;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -64,7 +66,7 @@ public class StiQRcontent extends AppCompatActivity {
 
     private ProgressBar loading;
 
-    private String code;
+    public static String code;
     DatabaseHelper myDB;
 
 
@@ -95,6 +97,15 @@ public class StiQRcontent extends AppCompatActivity {
         buildRecyclerView(mList);
         mRecyclerView = findViewById(R.id.recyclerview_id);
         loading = findViewById(R.id.progress);
+
+        FloatingActionButton add = findViewById(R.id.fab);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheet bottomSheet = new BottomSheet();
+                bottomSheet.show(getSupportFragmentManager(),"BottomSheet");
+            }
+        });
 
 
     }

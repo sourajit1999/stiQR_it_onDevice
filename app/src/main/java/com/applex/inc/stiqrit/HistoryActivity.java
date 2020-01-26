@@ -200,7 +200,6 @@ public class HistoryActivity extends AppCompatActivity
                     mList.add(new historyItems(data.getString(1), data.getString(2), data.getString(3), data.getString(4)));
                 }
             }
-
         }
     }
 

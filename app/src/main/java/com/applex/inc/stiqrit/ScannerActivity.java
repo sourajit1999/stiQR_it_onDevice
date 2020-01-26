@@ -114,13 +114,38 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
         }
 
         else{
-            while (data.moveToPrevious()){
-                if(code.equals(data.getString(1))){
-                    Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
-                    intent.putExtra("stiQR_ID" , code);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
+//            while (data.moveToPrevious()){
+//                if(code.equals(data.getString(1))){
+//                    Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
+//                    intent.putExtra("stiQR_ID" , code);
+//                    startActivity(intent);
+//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//                    finish();
+//                }
+//            }
+            ArrayList<historyItems> mList ;
+            mList = new ArrayList<>();
+
+            //TARGET FOLDER
+            //File downloadsFolder= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File folder =  new File(Environment.getExternalStorageDirectory(),"stiQR it");
+            folder.mkdirs();
+
+            if (folder.isDirectory()) {
+                //GET ALL FILES IN DOWNLOAD FOLDER
+                File[] files = folder.listFiles();
+                for(int i =0; i<= files.length;i++){
+
+                    if(code.equals(files[i].getName())){
+
+                        Utility.showToast(ScannerActivity.this,Integer.toString(code.compareTo(files[i].getName())));
+
+                        Intent intent = new Intent(ScannerActivity.this , StiQRcontent.class);
+                        intent.putExtra("stiQR_ID" , code);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        finish();
+                    }
                 }
             }
 

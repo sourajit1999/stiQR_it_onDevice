@@ -28,4 +28,16 @@
         android:background="#40ffffff"
         android:visibility="visible"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:elevation="5dp"
+        app:pressedTranslationZ="@dimen/cardview_default_elevation"
+        app:srcCompat="@drawable/ic_add_white_24dp"
+        tools:ignore="VectorDrawableCompat" />
+
 </RelativeLayout>
