@@ -3,6 +3,8 @@ package com.applex.inc.stiqrit;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -43,7 +45,6 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
 
     DatabaseHelper myDB;
     private DatabaseReference mDatabase;
-
     Dialog mydialogue;
 
     @Override
@@ -61,9 +62,7 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
     public void handleResult(final Result result) {
 
         final String code = result.getText().trim();
-
         final String hash = Utility.md5(code);
-
         Cursor data = myDB.getListContents();
 
         if(data.getCount()==0){
@@ -76,15 +75,8 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null) {
                             if(dataSnapshot.getValue().toString().equals("0")){
-                                FirebaseDatabase.getInstance().getReference("Codes")
-                                        .child(hash)
-                                        .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                showdialogstiQR(code);
-                                            }
-                                        });
+                                showdialogstiQR(code);
+
                             }
                             else{
                                 Toast.makeText(ScannerActivity.this,"stiQR already in use!!", Toast.LENGTH_LONG)
@@ -113,101 +105,84 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
             }
         }
 
-        else{
-//            while (data.moveToPrevious()){
-//                if(code.equals(data.getString(1))){
-//                    Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
-//                    intent.putExtra("stiQR_ID" , code);
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//                    finish();
-//                }
-//            }
-            ArrayList<historyItems> mList ;
-            mList = new ArrayList<>();
+        else {   //Database not empty
 
-            //TARGET FOLDER
-            //File downloadsFolder= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File folder =  new File(Environment.getExternalStorageDirectory(),"stiQR it");
+            File folder = new File(Environment.getExternalStorageDirectory(), "stiQR it");
             folder.mkdirs();
 
+            int flag = 0;
+
             if (folder.isDirectory()) {
-                //GET ALL FILES IN DOWNLOAD FOLDER
                 File[] files = folder.listFiles();
-                for(int i =0; i<= files.length;i++){
+                for (int i = 0; i < files.length; i++) {
+                    File file = files[i];
+                    if (file.getName().matches(code)) {
+                        flag = 1;
+                        Intent intent = new Intent(ScannerActivity.this, StiQRcontent.class);
+                        intent.putExtra("stiQR_ID", code);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        finish();
+                        break;
+                    }
+                }
+            }
+            if (flag == 0) {
+                if (Utility.checkConnection(ScannerActivity.this)) {
+                    mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
+                            .child(hash);
 
-                    if(code.equals(files[i].getName())){
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                if (dataSnapshot.getValue().toString().equals("0")) {
+                                    showdialogstiQR(code);
 
-                        Utility.showToast(ScannerActivity.this,Integer.toString(code.compareTo(files[i].getName())));
+                                } else {
+                                    Toast.makeText(ScannerActivity.this, "stiQR already in use!!", Toast.LENGTH_LONG)
+                                            .show();
+                                    Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            } else {
+                                Toast.makeText(ScannerActivity.this, "stiQR not recognized!", Toast.LENGTH_LONG)
+                                        .show();
+                                Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    Utility.showToast(ScannerActivity.this, "Network unavailable...");
+                }
+            }
+        }
+    }
+
+    public void updateFirebase(final String code){
+
+        String hash = Utility.md5(code);
+        FirebaseDatabase.getInstance().getReference("Codes")
+                .child(hash)
+                .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
                         Intent intent = new Intent(ScannerActivity.this , StiQRcontent.class);
                         intent.putExtra("stiQR_ID" , code);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         finish();
                     }
-                }
-            }
-
-            if (Utility.checkConnection(ScannerActivity.this)){
-                mDatabase = FirebaseDatabase.getInstance().getReference("Codes")
-                        .child(hash);
-
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() != null) {
-                            if(dataSnapshot.getValue().toString().equals("0")){
-                                FirebaseDatabase.getInstance().getReference("Codes")
-                                        .child(hash)
-                                        .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                showdialogstiQR(code);
-                                            }
-                                        });
-                            }
-                            else{
-                                Toast.makeText(ScannerActivity.this,"stiQR already in use!!", Toast.LENGTH_LONG)
-                                        .show();
-                                Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }
-                        else {
-                            Toast.makeText(ScannerActivity.this,"stiQR not recognized!", Toast.LENGTH_LONG)
-                                    .show();
-                            Intent intent = new Intent(ScannerActivity.this, HistoryActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
                 });
-            }
-            else{
-                Utility.showToast(ScannerActivity.this,"Network unavailable...");
-            }
-        }
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        scannerView.setResultHandler(this);
-        scannerView.startCamera();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        scannerView.stopCamera();
     }
 
     public void showdialogstiQR(final String code){
@@ -239,15 +214,32 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                         Toast.makeText(ScannerActivity.this,"Something went wrong :(",Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        Intent intent = new Intent(ScannerActivity.this , StiQRcontent.class);
-                        intent.putExtra("stiQR_ID" , code);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        finish();
+//                        Intent intent = new Intent(ScannerActivity.this , StiQRcontent.class);
+//                        intent.putExtra("stiQR_ID" , code);
+//                        startActivity(intent);
+//                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//                        finish();
+                        updateFirebase(code);
                     }
                 }
             }
         });
+        mydialogue.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mydialogue.show();
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        scannerView.setResultHandler(this);
+        scannerView.startCamera();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scannerView.stopCamera();
+    }
+
 }

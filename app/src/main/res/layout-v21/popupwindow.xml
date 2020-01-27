@@ -4,9 +4,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_margin="5dp"
-    android:paddingTop="28dp"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    android:paddingTop="25dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Note type"
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingStart="15dp"
+        android:paddingBottom="12dp"
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,20 +36,24 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_photo_camera_black_24dp" />
+            android:padding="13dp"
+            android:background="@drawable/bottom_sheet_bg"
+            android:src="@drawable/ic_photo_camera_black_24dp"
+            />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
+            android:paddingTop="8dp"
             android:text="Camera"
             android:textColor="#909090"/>
     </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/Gallery"
+            android:id="@+id/gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -47,9 +62,11 @@
             android:padding="5dp"
         android:orientation="vertical">
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_gravity="center"
+            android:padding="13dp"
+            android:background="@drawable/bottom_sheet_bg"
             android:src="@drawable/ic_photo_black_24dp"
             />
         <TextView
@@ -58,6 +75,7 @@
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             android:text="Gallery"
+            android:paddingTop="8dp"
             android:textColor="#909090"/>
     </LinearLayout>
 
@@ -71,10 +89,11 @@
             android:padding="5dp"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_gravity="center"
-
+                android:padding="13dp"
+                android:background="@drawable/bottom_sheet_bg"
                 android:src="@drawable/ic_note_add_black_24dp"
                 />
             <TextView
@@ -82,6 +101,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="Add Note"
+                android:paddingTop="8dp"
                 android:textColor="#909090"/>
         </LinearLayout>
 
@@ -91,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="10dp">
+        android:paddingBottom="13dp">
 
         <LinearLayout
             android:id="@+id/videoLink"
@@ -104,15 +124,18 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_gravity="center"
+                android:padding="13dp"
+                android:background="@drawable/bottom_sheet_bg"
                 android:src="@drawable/ic_play_circle_outline_black_24dp" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="Video Link"
+                android:paddingTop="8dp"
                 android:textColor="#909090"/>
         </LinearLayout>
 
@@ -126,9 +149,11 @@
             android:padding="5dp"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_gravity="center"
+                android:padding="13dp"
+                android:background="@drawable/bottom_sheet_bg"
                 android:src="@drawable/ic_picture_as_pdf_black_24dp"
                 />
             <TextView
@@ -136,6 +161,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="Pdf/Doc"
+                android:paddingTop="8dp"
                 android:textColor="#909090"/>
         </LinearLayout>
 
@@ -149,9 +175,11 @@
             android:padding="5dp"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:layout_gravity="center"
+                android:padding="13dp"
+                android:background="@drawable/bottom_sheet_bg"
                 android:src="@drawable/ic_keyboard_voice_black_24dp"
                 />
             <TextView
@@ -159,6 +187,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="Record"
+                android:paddingTop="8dp"
                 android:textColor="#909090"/>
         </LinearLayout>
 

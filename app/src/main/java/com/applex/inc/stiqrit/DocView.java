@@ -52,7 +52,7 @@ import static java.lang.Boolean.TRUE;
 public class DocView extends AppCompatActivity {
 
     EditText mResultEt;
-    com.github.clans.fab.FloatingActionMenu flmenu;
+//    com.github.clans.fab.FloatingActionMenu flmenu;
     Button ocr;
 
     Dialog mydialogue;
@@ -182,270 +182,270 @@ public class DocView extends AppCompatActivity {
 
 
 
-    public void savePdf(){
-        Button save;
-        final EditText fileName;
-        TextView ext ;
+//    public void savePdf(){
+//        Button save;
+//        final EditText fileName;
+//        TextView ext ;
+////
+//        mydialogue.setContentView(R.layout.file_name_dialog);
+//        mydialogue.setCanceledOnTouchOutside(TRUE);
 //
-        mydialogue.setContentView(R.layout.file_name_dialog);
-        mydialogue.setCanceledOnTouchOutside(TRUE);
-
-        ext =  mydialogue.findViewById(R.id.extension);
-        ext.setText(".pdf");
-
-        save= mydialogue.findViewById(R.id.save);
-        fileName = mydialogue.findViewById(R.id.fname);
-        final String fName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis()) ;
-        fileName.setHint(fName);
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fileName.length() != 0) {
-                    final Document mDoc = new Document();
-                    final String filName=fileName.getText().toString().trim().replaceAll(" ","_");
-                    File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it","Pdf");
-                    f.mkdirs();
-                    final String filPath = Environment.getExternalStorageDirectory() + "/stiQR it/Pdf/" + filName + ".pdf";
-                    try {
-                        PdfWriter.getInstance(mDoc, new FileOutputStream(filPath));
-                        mDoc.open();
-                        String pdfText = mResultEt.getText().toString().replaceAll("\n", " ");
-                        mDoc.add(new Paragraph(pdfText));
-                        mDoc.close();
-
-                        Snackbar snackbar = Snackbar.make(flmenu, "PDF has been saved", Snackbar.LENGTH_LONG)
-                                .setAction("Share", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        File file = new File(filPath);
-                                        if (file.exists()) {
-
-                                            path = FileProvider.getUriForFile(
-                                                    DocView.this,
-                                                    "com.sourajit.stiQRit.fileprovider",
-                                                    file);
-                                            Intent intent = new Intent();
-                                            intent.setAction(Intent.ACTION_SEND);
-                                            intent.putExtra(Intent.EXTRA_TEXT, "sharing");
-                                            intent.putExtra(Intent.EXTRA_STREAM, path);
-                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                            intent.setType("Document/*");
-                                            startActivity(Intent.createChooser(intent, "SHARE"));
-
-                                        } else {
-                                            Toast.makeText(DocView.this, filName + " missing " + filPath, Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                        snackbar.show();
-
-                    } catch (Exception e) {
-                        Toast.makeText(DocView.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    final Document mDoc = new Document();
-                    final String filName=fName;
-                    File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it","Pdf");
-                    f.mkdirs();
-                    final String filPath = Environment.getExternalStorageDirectory() + "/stiQR it/Pdf/" + filName + ".pdf";
-                    try {
-                        PdfWriter.getInstance(mDoc, new FileOutputStream(filPath));
-                        mDoc.open();
-                        String pdfText = mResultEt.getText().toString().replaceAll("\n", " ");
-                        mDoc.add(new Paragraph(pdfText));
-                        mDoc.close();
-
-                        Snackbar snackbar = Snackbar.make(flmenu, "PDF has been saved", Snackbar.LENGTH_LONG)
-                                .setAction("Share", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        File file = new File(filPath);
-                                        if (file.exists()) {
-
-                                            path = FileProvider.getUriForFile(
-                                                    DocView.this,
-                                                    "com.sourajit.stiQRit.fileprovider",
-                                                    file);
-                                            Intent intent = new Intent();
-                                            intent.setAction(Intent.ACTION_SEND);
-                                            intent.putExtra(Intent.EXTRA_TEXT, "sharing");
-                                            intent.putExtra(Intent.EXTRA_STREAM, path);
-                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                            intent.setType("Document/*");
-                                            startActivity(Intent.createChooser(intent, "SHARE"));
-
-                                        } else {
-                                            Toast.makeText(DocView.this, filName + " missing " + filPath, Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                        snackbar.show();
-
-                    } catch (Exception e) {
-                        Toast.makeText(DocView.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                mydialogue.dismiss();
-                flmenu.close(true);
-            }
-        });
-        mydialogue.show();
-
-    }
-
-    public void saveDoc(){
-
-        Button save;
-        final EditText fileName;
-        TextView ext ;
-
-        mydialogue.setContentView(R.layout.file_name_dialog);
-        mydialogue.setCanceledOnTouchOutside(TRUE);
-
-        ext = mydialogue.findViewById(R.id.extension);
-        ext.setText(".txt");
-
-        save= mydialogue.findViewById(R.id.save);
-        fileName = mydialogue.findViewById(R.id.fname);
-        final String fName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
-        fileName.setHint(fName);
-
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(fileName.length()!=0){
-                    final String filName=fileName.getText().toString().trim().replaceAll(" ","_")+".txt";
-                    String filPath;
-                    FileOutputStream fos= null;
-
-                    try {
-                        String pdfText =mResultEt.getText().toString().replaceAll("\n"," ");
-                        File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it","Text doc");
-                        f.mkdirs();
-                        final File file = new File(Environment.getExternalStorageDirectory()+"/stiQRit/Text doc",filName);
-                        fos= new FileOutputStream(file);
-                        fos.write(pdfText.getBytes());
-                        fos.close();
-                        filPath = getFilesDir()+"/"+filName;
-
-                        final String finalFilPath = filPath;
-
-
-                        Snackbar snackbar = Snackbar.make(flmenu , "Doc. has been saved", Snackbar.LENGTH_LONG)
-                                .setAction("Share", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if(file.exists()) {
-                                            path = FileProvider.getUriForFile(
-                                                    DocView.this,
-                                                    "com.sourajit.stiQRit.fileprovider",
-                                                    file);
-                                            Intent intent = new Intent();
-                                            intent.setAction(Intent.ACTION_SEND);
-                                            intent.putExtra(Intent.EXTRA_TEXT, "sharing");
-                                            intent.putExtra(Intent.EXTRA_STREAM, path);
-                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                            intent.setType("Document/*");
-                                            startActivity(Intent.createChooser(intent, "SHARE"));
-
-//                                Toast.makeText(HistoryActivity.this,getFilesDir()+"/"+filName,Toast.LENGTH_LONG).show();
-
-                                        }
-                                        else{
-                                            Toast.makeText(DocView.this,filName+" missing "+ finalFilPath,Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                        snackbar.show();
-
-                    }
-                    catch (Exception e){
-                        Toast.makeText(DocView.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                    finally {
-                        if(fos!=null){
-                            try {
-                                fos.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-                else{
-                    final String filName=fName+".txt";
-
-                    String filPath;
-                    FileOutputStream fos= null;
-
-                    try {
-                        String pdfText =mResultEt.getText().toString().replaceAll("\n"," ");
-
-                        File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it","Text doc");
-                        f.mkdirs();
-                        final File file = new File(Environment.getExternalStorageDirectory()+"/stiQR it/Text doc",filName);
-
-                        fos= new FileOutputStream(file);
-                        fos.write(pdfText.getBytes());
-                        fos.close();;
-                        filPath = getFilesDir()+"/"+filName;
-
-                        final String finalFilPath = filPath;
-
-
-                        Snackbar snackbar = Snackbar.make(flmenu , "Doc. has been saved", Snackbar.LENGTH_LONG)
-                                .setAction("Share", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-
-                                        if(file.exists()) {
-                                            path = FileProvider.getUriForFile(
-                                                    DocView.this,
-                                                    "com.sourajit.stiQRit.fileprovider",
-                                                    file);
-                                            Intent intent = new Intent();
-                                            intent.setAction(Intent.ACTION_SEND);
-                                            intent.putExtra(Intent.EXTRA_TEXT, "sharing");
-                                            intent.putExtra(Intent.EXTRA_STREAM, path);
-                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                            intent.setType("Document/*");
-                                            startActivity(Intent.createChooser(intent, "SHARE"));
-
-//                                Toast.makeText(HistoryActivity.this,getFilesDir()+"/"+filName,Toast.LENGTH_LONG).show();
-
-                                        }
-                                        else{
-                                            Toast.makeText(DocView.this,filName+" missing "+ finalFilPath,Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                        snackbar.show();
-
-                    }
-                    catch (Exception e){
-                        Toast.makeText(DocView.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                    finally {
-                        if(fos!=null){
-                            try {
-                                fos.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-                mydialogue.dismiss();
-                flmenu.close(true);
-            }
-        });
-        mydialogue.show();
-
-    }
+//        ext =  mydialogue.findViewById(R.id.extension);
+//        ext.setText(".pdf");
+//
+//        save= mydialogue.findViewById(R.id.save);
+//        fileName = mydialogue.findViewById(R.id.fname);
+//        final String fName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis()) ;
+//        fileName.setHint(fName);
+//
+//        save.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (fileName.length() != 0) {
+//                    final Document mDoc = new Document();
+//                    final String filName=fileName.getText().toString().trim().replaceAll(" ","_");
+//                    File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it","Pdf");
+//                    f.mkdirs();
+//                    final String filPath = Environment.getExternalStorageDirectory() + "/stiQR it/Pdf/" + filName + ".pdf";
+//                    try {
+//                        PdfWriter.getInstance(mDoc, new FileOutputStream(filPath));
+//                        mDoc.open();
+//                        String pdfText = mResultEt.getText().toString().replaceAll("\n", " ");
+//                        mDoc.add(new Paragraph(pdfText));
+//                        mDoc.close();
+//
+//                        Snackbar snackbar = Snackbar.make(flmenu, "PDF has been saved", Snackbar.LENGTH_LONG)
+//                                .setAction("Share", new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        File file = new File(filPath);
+//                                        if (file.exists()) {
+//
+//                                            path = FileProvider.getUriForFile(
+//                                                    DocView.this,
+//                                                    "com.sourajit.stiQRit.fileprovider",
+//                                                    file);
+//                                            Intent intent = new Intent();
+//                                            intent.setAction(Intent.ACTION_SEND);
+//                                            intent.putExtra(Intent.EXTRA_TEXT, "sharing");
+//                                            intent.putExtra(Intent.EXTRA_STREAM, path);
+//                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                            intent.setType("Document/*");
+//                                            startActivity(Intent.createChooser(intent, "SHARE"));
+//
+//                                        } else {
+//                                            Toast.makeText(DocView.this, filName + " missing " + filPath, Toast.LENGTH_LONG).show();
+//                                        }
+//                                    }
+//                                });
+//                        snackbar.show();
+//
+//                    } catch (Exception e) {
+//                        Toast.makeText(DocView.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//                else{
+//                    final Document mDoc = new Document();
+//                    final String filName=fName;
+//                    File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it","Pdf");
+//                    f.mkdirs();
+//                    final String filPath = Environment.getExternalStorageDirectory() + "/stiQR it/Pdf/" + filName + ".pdf";
+//                    try {
+//                        PdfWriter.getInstance(mDoc, new FileOutputStream(filPath));
+//                        mDoc.open();
+//                        String pdfText = mResultEt.getText().toString().replaceAll("\n", " ");
+//                        mDoc.add(new Paragraph(pdfText));
+//                        mDoc.close();
+//
+//                        Snackbar snackbar = Snackbar.make(flmenu, "PDF has been saved", Snackbar.LENGTH_LONG)
+//                                .setAction("Share", new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        File file = new File(filPath);
+//                                        if (file.exists()) {
+//
+//                                            path = FileProvider.getUriForFile(
+//                                                    DocView.this,
+//                                                    "com.sourajit.stiQRit.fileprovider",
+//                                                    file);
+//                                            Intent intent = new Intent();
+//                                            intent.setAction(Intent.ACTION_SEND);
+//                                            intent.putExtra(Intent.EXTRA_TEXT, "sharing");
+//                                            intent.putExtra(Intent.EXTRA_STREAM, path);
+//                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                            intent.setType("Document/*");
+//                                            startActivity(Intent.createChooser(intent, "SHARE"));
+//
+//                                        } else {
+//                                            Toast.makeText(DocView.this, filName + " missing " + filPath, Toast.LENGTH_LONG).show();
+//                                        }
+//                                    }
+//                                });
+//                        snackbar.show();
+//
+//                    } catch (Exception e) {
+//                        Toast.makeText(DocView.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//                mydialogue.dismiss();
+//                flmenu.close(true);
+//            }
+//        });
+//        mydialogue.show();
+//
+//    }
+//
+//    public void saveDoc(){
+//
+//        Button save;
+//        final EditText fileName;
+//        TextView ext ;
+//
+//        mydialogue.setContentView(R.layout.file_name_dialog);
+//        mydialogue.setCanceledOnTouchOutside(TRUE);
+//
+//        ext = mydialogue.findViewById(R.id.extension);
+//        ext.setText(".txt");
+//
+//        save= mydialogue.findViewById(R.id.save);
+//        fileName = mydialogue.findViewById(R.id.fname);
+//        final String fName = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis());
+//        fileName.setHint(fName);
+//
+//
+//        save.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(fileName.length()!=0){
+//                    final String filName=fileName.getText().toString().trim().replaceAll(" ","_")+".txt";
+//                    String filPath;
+//                    FileOutputStream fos= null;
+//
+//                    try {
+//                        String pdfText =mResultEt.getText().toString().replaceAll("\n"," ");
+//                        File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it","Text doc");
+//                        f.mkdirs();
+//                        final File file = new File(Environment.getExternalStorageDirectory()+"/stiQRit/Text doc",filName);
+//                        fos= new FileOutputStream(file);
+//                        fos.write(pdfText.getBytes());
+//                        fos.close();
+//                        filPath = getFilesDir()+"/"+filName;
+//
+//                        final String finalFilPath = filPath;
+//
+//
+//                        Snackbar snackbar = Snackbar.make(flmenu , "Doc. has been saved", Snackbar.LENGTH_LONG)
+//                                .setAction("Share", new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        if(file.exists()) {
+//                                            path = FileProvider.getUriForFile(
+//                                                    DocView.this,
+//                                                    "com.sourajit.stiQRit.fileprovider",
+//                                                    file);
+//                                            Intent intent = new Intent();
+//                                            intent.setAction(Intent.ACTION_SEND);
+//                                            intent.putExtra(Intent.EXTRA_TEXT, "sharing");
+//                                            intent.putExtra(Intent.EXTRA_STREAM, path);
+//                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                            intent.setType("Document/*");
+//                                            startActivity(Intent.createChooser(intent, "SHARE"));
+//
+////                                Toast.makeText(HistoryActivity.this,getFilesDir()+"/"+filName,Toast.LENGTH_LONG).show();
+//
+//                                        }
+//                                        else{
+//                                            Toast.makeText(DocView.this,filName+" missing "+ finalFilPath,Toast.LENGTH_LONG).show();
+//                                        }
+//                                    }
+//                                });
+//                        snackbar.show();
+//
+//                    }
+//                    catch (Exception e){
+//                        Toast.makeText(DocView.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+//                    }
+//                    finally {
+//                        if(fos!=null){
+//                            try {
+//                                fos.close();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }
+//                else{
+//                    final String filName=fName+".txt";
+//
+//                    String filPath;
+//                    FileOutputStream fos= null;
+//
+//                    try {
+//                        String pdfText =mResultEt.getText().toString().replaceAll("\n"," ");
+//
+//                        File f=  new File(Environment.getExternalStorageDirectory()+"/stiQR it","Text doc");
+//                        f.mkdirs();
+//                        final File file = new File(Environment.getExternalStorageDirectory()+"/stiQR it/Text doc",filName);
+//
+//                        fos= new FileOutputStream(file);
+//                        fos.write(pdfText.getBytes());
+//                        fos.close();;
+//                        filPath = getFilesDir()+"/"+filName;
+//
+//                        final String finalFilPath = filPath;
+//
+//
+//                        Snackbar snackbar = Snackbar.make(flmenu , "Doc. has been saved", Snackbar.LENGTH_LONG)
+//                                .setAction("Share", new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//
+//
+//                                        if(file.exists()) {
+//                                            path = FileProvider.getUriForFile(
+//                                                    DocView.this,
+//                                                    "com.sourajit.stiQRit.fileprovider",
+//                                                    file);
+//                                            Intent intent = new Intent();
+//                                            intent.setAction(Intent.ACTION_SEND);
+//                                            intent.putExtra(Intent.EXTRA_TEXT, "sharing");
+//                                            intent.putExtra(Intent.EXTRA_STREAM, path);
+//                                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                            intent.setType("Document/*");
+//                                            startActivity(Intent.createChooser(intent, "SHARE"));
+//
+////                                Toast.makeText(HistoryActivity.this,getFilesDir()+"/"+filName,Toast.LENGTH_LONG).show();
+//
+//                                        }
+//                                        else{
+//                                            Toast.makeText(DocView.this,filName+" missing "+ finalFilPath,Toast.LENGTH_LONG).show();
+//                                        }
+//                                    }
+//                                });
+//                        snackbar.show();
+//
+//                    }
+//                    catch (Exception e){
+//                        Toast.makeText(DocView.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+//                    }
+//                    finally {
+//                        if(fos!=null){
+//                            try {
+//                                fos.close();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }
+//                mydialogue.dismiss();
+//                flmenu.close(true);
+//            }
+//        });
+//        mydialogue.show();
+//
+//    }
 
 
     public void pickGallery(){
@@ -622,11 +622,11 @@ public class DocView extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(flmenu.isOpened()){
-            flmenu.close(true);
-        }
-        else {
+//        if(flmenu.isOpened()){
+//            flmenu.close(true);
+//        }
+//        else {
             super.onBackPressed();
-        }
+//        }
     }
 }

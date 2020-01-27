@@ -21,6 +21,10 @@ public class historyItems {
         mDate = date;
     }
 
+    public String getmCode() {
+        return mCode;
+    }
+
     public String getmTitle() {
         return mTitle;
     }
@@ -31,10 +35,6 @@ public class historyItems {
 
     public String getmDate() {
         return mDate;
-    }
-
-    public String getmCode() {
-        return mCode;
     }
 
 }

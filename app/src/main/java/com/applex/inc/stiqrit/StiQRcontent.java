@@ -167,17 +167,26 @@ public class StiQRcontent extends AppCompatActivity {
             File[] files = folder.listFiles();
 
             //LOOP THRU THOSE FILES GETTING NAME AND URI
-            for (int i = 0; i < files.length; i++) {
-                File file=files[i];
-                gridItems gi= new gridItems();
-                gi.setmName(file.getName());
-                gi.setmResourceImage(Uri.fromFile(file));
-
+            if(files.length == 0){
+                gridItems gi = new gridItems();
+                gi.setmName("Start Adding...");
                 mList.add(gi);
 
             }
+            else {
+                for (int i = 0; i < files.length; i++) {
+                    File file = files[i];
+                    gridItems gi = new gridItems();
+                    gi.setmName(file.getName());
+                    gi.setmResourceImage(Uri.fromFile(file));
+
+                    mList.add(gi);
+                }
+            }
+
             loading.setVisibility(View.GONE);
         }
+
     }
 
 

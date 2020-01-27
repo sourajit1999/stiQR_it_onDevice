@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import com.applex.inc.stiqrit.Adapters.HistoryAdapter;
 import com.applex.inc.stiqrit.ModelItems.UserDetails;
 import com.applex.inc.stiqrit.ModelItems.historyItems;
 import com.applex.inc.stiqrit.Util.DatabaseHelper;
+import com.applex.inc.stiqrit.Util.Utility;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -177,7 +179,6 @@ public class HistoryActivity extends AppCompatActivity
     public void createList() {
         mList = new ArrayList<>();
 
-        //TARGET FOLDER
         //File downloadsFolder= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File folder =  new File(Environment.getExternalStorageDirectory(),"stiQR it");
         folder.mkdirs();
@@ -191,14 +192,21 @@ public class HistoryActivity extends AppCompatActivity
             if (data.getCount() == 0) {
                 Calendar calendar = Calendar.getInstance();
                 String currDate = DateFormat.getDateInstance().format(calendar.getTime());
-
                 mList.add(new historyItems("000", "Welcome To stiQR it ", "Scan your first stiQRt", currDate));
-
-            } else {
+            }
+            else {
                 data.moveToPosition(data.getCount());
                 while (data.moveToPrevious()) {
-                    mList.add(new historyItems(data.getString(1), data.getString(2), data.getString(3), data.getString(4)));
+                    for (int i = 0; i < files.length ; i++)
+                    {
+                        File file = files[i];
+                        if(file.getName().matches(data.getString(1))) {
+                            mList.add(new historyItems(data.getString(1), data.getString(2), data.getString(3), data.getString(4)));
+                            break;
+                        }
+                    }
                 }
+
             }
         }
     }

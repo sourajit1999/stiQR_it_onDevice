@@ -3,6 +3,7 @@ package com.applex.inc.stiqrit.Util;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,16 +44,17 @@ public class BottomSheet extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.popupwindow,container,false);
+//        view.setBackgroundColor(Color.TRANSPARENT);
 
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         LinearLayout button1 = view.findViewById(R.id.camera);
-        LinearLayout button2=view.findViewById(R.id.Gallery);
-        LinearLayout button3=view.findViewById(R.id.Note);
-        LinearLayout button4=view.findViewById(R.id.videoLink);
-        LinearLayout button5=view.findViewById(R.id.pdf);
-        LinearLayout button6=view.findViewById(R.id.voice);
+        LinearLayout button2 = view.findViewById(R.id.gallery);
+        LinearLayout button3 = view.findViewById(R.id.note);
+        LinearLayout button4 = view.findViewById(R.id.videoLink);
+        LinearLayout button5 = view.findViewById(R.id.pdf);
+        LinearLayout button6 = view.findViewById(R.id.voice);
 //
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
