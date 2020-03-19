@@ -139,6 +139,22 @@ public class HistoryActivity extends AppCompatActivity
             }
         });
 
+//        Intent intent = getIntent();    //////////SHARED CONTENT///////
+//        String action = intent.getAction();
+//        String type = intent.getType();
+//        if(Intent.ACTION_SEND.equals(action) && type != null){
+//
+//            if ("text/plain".equals(type)) {
+//                String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+//                if (sharedText != null) {
+//                    if(sharedText.contains("youtu.be")){
+//
+//                    Toast.makeText(getApplicationContext(),sharedText,Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            }
+//        }
+
     }
 
     public void buildRecyclerView(final ArrayList<historyItems> brvList) {

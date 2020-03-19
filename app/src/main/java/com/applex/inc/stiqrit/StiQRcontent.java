@@ -108,6 +108,9 @@ public class StiQRcontent extends AppCompatActivity {
         });
 
 
+
+
+
     }
 
     /////////////////Recycler view constructing func/////////////////
